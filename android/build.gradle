@@ -5,17 +5,35 @@ buildscript {
         compileSdkVersion = 35
         targetSdkVersion = 35
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.0.21"
+        kotlinVersion = "2.0.21" 
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        // Mantenha APENAS esta linha, com a versão 8.8.2
+        classpath("com.android.tools.build:gradle:8.8.2") 
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
 
 apply plugin: "com.facebook.react.rootproject"
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+        // Isso garante que o React Native possa encontrar seus módulos Android
+        maven { url "$rootDir/../node_modules/react-native/android" }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0"
+        force "com.google.mlkit:barcode-scanning:17.2.0"
+        force "com.google.android.gms:play-services-mlkit-face-detection:17.0.1"
+        force "com.google.mlkit:face-detection:16.1.5"
+    }
+}
